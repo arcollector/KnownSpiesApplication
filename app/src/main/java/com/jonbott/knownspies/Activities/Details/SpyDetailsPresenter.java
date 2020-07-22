@@ -4,8 +4,7 @@ import android.content.Context;
 
 import com.jonbott.knownspies.Helpers.Helper;
 import com.jonbott.knownspies.ModelLayer.Database.Realm.Spy;
-
-import io.realm.Realm;
+import com.jonbott.knownspies.ModelLayer.ModelLayer;
 
 /**
  * Created by martin on 7/22/20.
@@ -13,7 +12,9 @@ import io.realm.Realm;
 
 public class SpyDetailsPresenter {
 
-    private Realm realm = Realm.getDefaultInstance();
+    private ModelLayer modelLayer = new ModelLayer();
+
+    Spy spy;
 
     public String age;
     public int imageId;
@@ -26,8 +27,13 @@ public class SpyDetailsPresenter {
 
     public SpyDetailsPresenter(int spyId) {
         this.spyId = spyId;
-        Spy spy = getSpy(spyId);
 
+        spy = modelLayer.spyForId(spyId);
+
+        configureSpy();
+    }
+
+    private void configureSpy() {
         age = String.valueOf(spy.age);
         name = spy.name;
         gender = spy.gender;
@@ -39,12 +45,4 @@ public class SpyDetailsPresenter {
         imageId = Helper.resourceIdWith(context, imageName);
     }
 
-    //region Data loading
-
-    private Spy getSpy(int id) {
-        Spy tempSpy = realm.where(Spy.class).equalTo("id", id).findFirst();
-        return realm.copyFromRealm(tempSpy);
-    }
-
-    //endregion
 }

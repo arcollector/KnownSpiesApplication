@@ -1,8 +1,11 @@
 package com.jonbott.knownspies.ModelLayer.DTOs;
 
+import com.jonbott.knownspies.ModelLayer.Enums.DTOType;
 import com.jonbott.knownspies.ModelLayer.Enums.Gender;
 
 import java.util.Random;
+
+import static com.jonbott.knownspies.ModelLayer.Enums.DTOType.spy;
 
 /**
  * Created by j on 4/24/17.
@@ -17,6 +20,7 @@ public class SpyDTO {
     public String password;
     public String imageName;
     public boolean isIncognito;
+    public static DTOType dtoType = spy;
 
     public SpyDTO(int id, int age, String name, Gender gender, String password, String imageName, boolean isIncognito) {
         this.id = id;
