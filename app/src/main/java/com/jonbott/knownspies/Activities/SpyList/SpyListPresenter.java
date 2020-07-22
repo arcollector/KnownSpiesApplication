@@ -28,7 +28,7 @@ import okhttp3.Response;
 
 public class SpyListPresenter {
 
-    private static final String TAG = "SpyListPresenet";
+    private static final String TAG = "SpyListPresenter";
 
     private SpyTranslator spyTranslator = new SpyTranslator();
     private Realm realm = Realm.getDefaultInstance();
