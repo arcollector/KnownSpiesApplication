@@ -10,11 +10,7 @@ import android.widget.TextView;
 
 import com.jonbott.knownspies.Activities.SpyList.SpyListActivity;
 import com.jonbott.knownspies.Helpers.Constants;
-import com.jonbott.knownspies.Helpers.Threading;
-import com.jonbott.knownspies.ModelLayer.Database.Realm.Spy;
 import com.jonbott.knownspies.R;
-
-import io.realm.Realm;
 
 public class SecretDetailsActivity extends AppCompatActivity {
 
@@ -79,8 +75,5 @@ public class SecretDetailsActivity extends AppCompatActivity {
     }
 
     //endregion
-
-
-
 
 }

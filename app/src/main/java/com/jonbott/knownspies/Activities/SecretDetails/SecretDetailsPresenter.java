@@ -1,6 +1,7 @@
 package com.jonbott.knownspies.Activities.SecretDetails;
 
 import com.jonbott.knownspies.Helpers.Threading;
+import com.jonbott.knownspies.ModelLayer.DTOs.SpyDTO;
 import com.jonbott.knownspies.ModelLayer.Database.Realm.Spy;
 import com.jonbott.knownspies.ModelLayer.ModelLayer;
 
@@ -14,7 +15,7 @@ public class SecretDetailsPresenter {
 
     private ModelLayer modelLayer = new ModelLayer();
 
-    private Spy spy;
+    private SpyDTO spy;
     private String password;
 
     public SecretDetailsPresenter(int spyId) {

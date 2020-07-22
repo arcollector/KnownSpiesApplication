@@ -25,11 +25,12 @@ public class ModelLayer {
     private TranslatorLayer translatorLayer = new TranslatorLayer();
 
     public void loadData(
-            Consumer<List<Spy>> onNewResults,
+            Consumer<List<SpyDTO>> onNewResults,
             Consumer<Source> notifyDataRecieved
     ) {
+        SpyTranslator spyTranslator = translatorLayer.translatorFor(SpyDTO.dtoType);
         try {
-            dataLayer.loadSpiesFromLocal(onNewResults);
+            dataLayer.loadSpiesFromLocal(spyTranslator::translate, onNewResults);
             notifyDataRecieved.accept(Source.local);
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,9 +39,15 @@ public class ModelLayer {
         networkLayer.loadJson(json -> {
             notifyDataRecieved.accept(Source.network);
             persistJson(json, () -> {
-                dataLayer.loadSpiesFromLocal(onNewResults);
+                dataLayer.loadSpiesFromLocal(spyTranslator::translate, onNewResults);
             });
         });
+    }
+
+    public SpyDTO spyForId(int spyId) {
+        Spy spy = dataLayer.spyForId(spyId);
+        SpyDTO dto = translatorLayer.translate(spy);
+        return dto;
     }
 
     private void persistJson(String json, Action finished) {
@@ -51,7 +58,7 @@ public class ModelLayer {
             dataLayer.clearSpies(() -> {
                 dtos.forEach(dto -> dto.initialize());
                 SpyTranslator translator = translatorLayer.translatorFor(SpyDTO.dtoType);
-                dataLayer.persistDTOs(dtos, translator);
+                dataLayer.persistDTOs(dtos, translator::translate);
 
                 Threading.dispatchMain(() -> finished.run());
             });
@@ -60,12 +67,5 @@ public class ModelLayer {
         });
     }
 
-    //region Data loading
-
-    public Spy spyForId(int spyId) {
-        return dataLayer.spyForId(spyId);
-    }
-
-    //endregion
 
 }

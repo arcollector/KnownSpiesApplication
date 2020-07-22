@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.jonbott.knownspies.Activities.Details.SpyDetailsActivity;
 import com.jonbott.knownspies.Helpers.Constants;
+import com.jonbott.knownspies.ModelLayer.DTOs.SpyDTO;
 import com.jonbott.knownspies.ModelLayer.Database.Realm.Spy;
 import com.jonbott.knownspies.ModelLayer.Enums.Source;
 import com.jonbott.knownspies.R;
@@ -20,7 +21,7 @@ public class SpyListActivity extends AppCompatActivity {
 
     private static final String TAG = "SpyListActivity";
 
-    private List<Spy> spies = new ArrayList<>();
+    private List<SpyDTO> spies = new ArrayList<>();
     private RecyclerView recyclerView;
 
     private SpyListPresenter presenter = new SpyListPresenter();
@@ -74,7 +75,7 @@ public class SpyListActivity extends AppCompatActivity {
     //region User Interaction
 
     private void rowTapped(int position) {
-        Spy spy = spies.get(position);
+        SpyDTO spy = spies.get(position);
         gotoSpyDetails(spy.id);
     }
 

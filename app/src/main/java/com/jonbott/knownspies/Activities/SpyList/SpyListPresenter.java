@@ -1,5 +1,6 @@
 package com.jonbott.knownspies.Activities.SpyList;
 
+import com.jonbott.knownspies.ModelLayer.DTOs.SpyDTO;
 import com.jonbott.knownspies.ModelLayer.Database.Realm.Spy;
 import com.jonbott.knownspies.ModelLayer.Enums.Source;
 import com.jonbott.knownspies.ModelLayer.ModelLayer;
@@ -21,7 +22,7 @@ public class SpyListPresenter {
     //region Presenter Method
 
     public void loadData(
-            Consumer<List<Spy>> onNewResults,
+            Consumer<List<SpyDTO>> onNewResults,
             Consumer<Source> notifyDataRecieved
     ) {
         modelLayer.loadData(onNewResults, notifyDataRecieved);
