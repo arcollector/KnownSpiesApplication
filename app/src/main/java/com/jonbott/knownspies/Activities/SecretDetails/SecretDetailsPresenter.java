@@ -13,14 +13,21 @@ import io.reactivex.functions.Consumer;
 
 public class SecretDetailsPresenter {
 
-    private ModelLayer modelLayer = new ModelLayer();
+    private String password;
+    private int spyId;
 
     private SpyDTO spy;
-    private String password;
+    private ModelLayer modelLayer;
 
-    public SecretDetailsPresenter(int spyId) {
+    public SecretDetailsPresenter(int spyId, ModelLayer modelLayer) {
+        this.spyId = spyId;
+        this.modelLayer = modelLayer;
+
+        configureData();
+    }
+
+    private void configureData() {
         spy = modelLayer.spyForId(spyId);
-
         password = spy.password;
     }
 

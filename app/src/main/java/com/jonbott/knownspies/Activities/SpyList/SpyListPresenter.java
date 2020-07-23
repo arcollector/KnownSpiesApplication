@@ -17,7 +17,11 @@ public class SpyListPresenter {
 
     private static final String TAG = "SpyListPresenter";
 
-    ModelLayer modelLayer = new ModelLayer();
+    ModelLayer modelLayer;
+
+    public SpyListPresenter(ModelLayer modelLayer) {
+        this.modelLayer = modelLayer;
+    }
 
     //region Presenter Method
 

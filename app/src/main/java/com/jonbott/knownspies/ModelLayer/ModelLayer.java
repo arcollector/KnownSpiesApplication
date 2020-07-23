@@ -20,9 +20,15 @@ import io.reactivex.functions.Consumer;
 
 public class ModelLayer {
 
-    private NetworkLayer networkLayer = new NetworkLayer();
-    private DataLayer dataLayer = new DataLayer();
-    private TranslatorLayer translatorLayer = new TranslatorLayer();
+    private NetworkLayer networkLayer;
+    private DataLayer dataLayer;
+    private TranslatorLayer translatorLayer;
+
+    public ModelLayer(NetworkLayer networkLayer, DataLayer dataLayer, TranslatorLayer translatorLayer) {
+        this.networkLayer = networkLayer;
+        this.dataLayer = dataLayer;
+        this.translatorLayer = translatorLayer;
+    }
 
     public void loadData(
             Consumer<List<SpyDTO>> onNewResults,

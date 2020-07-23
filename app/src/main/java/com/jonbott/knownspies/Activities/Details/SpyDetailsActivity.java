@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jonbott.knownspies.Activities.SecretDetails.SecretDetailsActivity;
+import com.jonbott.knownspies.Dependencies.DependencyRegistry;
 import com.jonbott.knownspies.Helpers.Constants;
 import com.jonbott.knownspies.R;
 
@@ -25,12 +26,9 @@ public class SpyDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spy_details);
         attachUI();
-        parseBundle();
-    }
 
-    public void configure(SpyDetailsPresenter presenter) {
-        this.presenter = presenter;
-        this.presenter.configureWithContext(this);
+        Bundle bundle = getIntent().getExtras();
+        DependencyRegistry.shared.inject(this, bundle);
     }
 
     //region Helper Methods
@@ -44,7 +42,13 @@ public class SpyDetailsActivity extends AppCompatActivity {
         calculateButton.setOnClickListener(v -> gotoSecretDetails());
     }
 
-    private void configureUIWith(SpyDetailsPresenter presenter) {
+    // endregion
+
+    // region Injection Methods
+
+    public void configureWith(SpyDetailsPresenter presenter) {
+        this.presenter = presenter;
+
         profileImage.setImageResource(presenter.imageId);
         nameTextView.setText(presenter.name);
         ageTextView.setText(String.valueOf(presenter.age));
@@ -53,27 +57,13 @@ public class SpyDetailsActivity extends AppCompatActivity {
 
     // endregion
 
-    //region Dependency Methods
-
-    private void getPresenterFor(int spyId) {
-        configure(new SpyDetailsPresenter(spyId));
-        configureUIWith(this.presenter);
-    }
-
-    // endregion
-
     // region navigation
 
-    private void parseBundle() {
-        Bundle b = getIntent().getExtras();
-
-        if(b != null) {
-            int spyId = b.getInt(Constants.spyIdKey);
-            getPresenterFor(spyId);
-        }
-    }
-
     private void gotoSecretDetails() {
+        if(presenter == null) {
+            return;
+        }
+
         Bundle bundle = new Bundle();
                bundle.putInt(Constants.spyIdKey, presenter.spyId);
 

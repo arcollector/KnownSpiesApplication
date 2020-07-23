@@ -4,9 +4,9 @@ import android.util.Log;
 
 import com.jonbott.knownspies.ModelLayer.DTOs.SpyDTO;
 import com.jonbott.knownspies.ModelLayer.Database.Realm.Spy;
-import com.jonbott.knownspies.ModelLayer.Translation.SpyTranslator;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Action;
@@ -24,7 +24,13 @@ public class DataLayer {
 
     private static final String TAG = "DataLayer";
 
-    private Realm realm = Realm.getDefaultInstance();
+    private Realm realm;
+    private Callable<Realm> newRealmInstanceOnCurrentThread;
+
+    public DataLayer(Realm realm, Callable<Realm> newRealmInstanceOnCurrentThread) {
+        this.realm = realm;
+        this.newRealmInstanceOnCurrentThread = newRealmInstanceOnCurrentThread;
+    }
 
     //region Database Methods
 
@@ -64,13 +70,17 @@ public class DataLayer {
         }
     }
 
-    public void clearSpies(Action finished) throws Exception {
+    public void clearSpies(Action finished) {
         Log.d(TAG, "clearing DB");
 
-        Realm backgroundRealm = Realm.getInstance(realm.getConfiguration());
-        backgroundRealm.executeTransaction(r -> r.delete(Spy.class));
-
-        finished.run();
+        try {
+            Realm backgroundRealm = newRealmInstanceOnCurrentThread.call();
+            backgroundRealm.executeTransaction(r -> r.delete(Spy.class));
+            backgroundRealm.close();
+            finished.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void persistDTOs(
@@ -79,11 +89,15 @@ public class DataLayer {
     ) {
         Log.d(TAG, "persisting dtos to DB");
 
-        Realm backgroundRealm = Realm.getInstance(realm.getConfiguration());
-        backgroundRealm.executeTransaction(r -> r.delete(Spy.class));
-
-        //ignore result and just save in realm
-        dtos.forEach(dto -> convertToSpy(translationBlock, backgroundRealm, dto));
+        try {
+            Realm backgroundRealm = newRealmInstanceOnCurrentThread.call();
+            backgroundRealm.executeTransaction(r -> r.delete(Spy.class));
+            //ignore result and just save in realm
+            dtos.forEach(dto -> convertToSpy(translationBlock, backgroundRealm, dto));
+            backgroundRealm.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void convertToSpy(

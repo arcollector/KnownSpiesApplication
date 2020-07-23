@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.jonbott.knownspies.Helpers.Helper;
 import com.jonbott.knownspies.ModelLayer.DTOs.SpyDTO;
-import com.jonbott.knownspies.ModelLayer.Database.Realm.Spy;
 import com.jonbott.knownspies.ModelLayer.ModelLayer;
 
 /**
@@ -13,10 +12,6 @@ import com.jonbott.knownspies.ModelLayer.ModelLayer;
 
 public class SpyDetailsPresenter {
 
-    private ModelLayer modelLayer = new ModelLayer();
-
-    SpyDTO spy;
-
     public String age;
     public int imageId;
     public String name;
@@ -24,25 +19,30 @@ public class SpyDetailsPresenter {
     public String imageName;
     public int spyId;
 
+    SpyDTO spy;
     private Context context;
+    private ModelLayer modelLayer;
 
-    public SpyDetailsPresenter(int spyId) {
+    public SpyDetailsPresenter(
+            int spyId,
+            Context context,
+            ModelLayer modelLayer
+    ) {
         this.spyId = spyId;
+        this.context = context;
+        this.modelLayer = modelLayer;
 
-        spy = modelLayer.spyForId(spyId);
-
-        configureSpy();
+        configureData();
     }
 
-    private void configureSpy() {
+    private void configureData() {
+        spy = modelLayer.spyForId(spyId);
+
         age = String.valueOf(spy.age);
         name = spy.name;
         gender = spy.gender.name();
         imageName = spy.imageName;
-    }
 
-    public void configureWithContext(Context context) {
-        this.context = context;
         imageId = Helper.resourceIdWith(context, imageName);
     }
 

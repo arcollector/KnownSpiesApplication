@@ -9,7 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.jonbott.knownspies.Activities.SpyList.SpyListActivity;
-import com.jonbott.knownspies.Helpers.Constants;
+import com.jonbott.knownspies.Dependencies.DependencyRegistry;
 import com.jonbott.knownspies.R;
 
 public class SecretDetailsActivity extends AppCompatActivity {
@@ -26,10 +26,12 @@ public class SecretDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_secret_details);
 
         attachUI();
-        parseBundle();
+
+        Bundle bundle = getIntent().getExtras();
+        DependencyRegistry.shared.inject(this, bundle);
     }
 
-    private void configure(SecretDetailsPresenter presenter) {
+    public void configureWith(SecretDetailsPresenter presenter) {
         this.presenter = presenter;
         this.presenter.crackPassword(password -> {
             progressBar.setVisibility(View.GONE);
@@ -47,24 +49,6 @@ public class SecretDetailsActivity extends AppCompatActivity {
         finishedButton.setOnClickListener(v -> finishedClicked() );
 
     }
-
-    // region Dependency Methods
-    private void setupPresenterFor(int spyId) {
-        configure(new SecretDetailsPresenter(spyId));
-    }
-
-    // endregion
-
-    private void parseBundle() {
-        Bundle b = getIntent().getExtras();
-
-        if(b != null) {
-            int spyId = b.getInt(Constants.spyIdKey);
-            setupPresenterFor(spyId);
-        }
-    }
-
-    //endregion
 
     //region User Interaction
 
