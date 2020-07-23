@@ -49,10 +49,10 @@ public class SpyDetailsActivity extends AppCompatActivity {
     public void configureWith(SpyDetailsPresenter presenter) {
         this.presenter = presenter;
 
-        profileImage.setImageResource(presenter.imageId);
-        nameTextView.setText(presenter.name);
-        ageTextView.setText(String.valueOf(presenter.age));
-        genderTextView.setText(presenter.gender);
+        profileImage.setImageResource(presenter.getImageId());
+        nameTextView.setText(presenter.getName());
+        ageTextView.setText(String.valueOf(presenter.getAge()));
+        genderTextView.setText(presenter.getGender());
     }
 
     // endregion
@@ -65,7 +65,7 @@ public class SpyDetailsActivity extends AppCompatActivity {
         }
 
         Bundle bundle = new Bundle();
-               bundle.putInt(Constants.spyIdKey, presenter.spyId);
+               bundle.putInt(Constants.spyIdKey, presenter.getSpyId());
 
         Intent intent = new Intent(SpyDetailsActivity.this, SecretDetailsActivity.class);
                intent.putExtras(bundle);
