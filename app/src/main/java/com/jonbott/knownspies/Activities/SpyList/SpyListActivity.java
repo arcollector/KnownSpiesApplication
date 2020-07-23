@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.jonbott.knownspies.Activities.Details.SpyDetailsActivity;
+import com.jonbott.knownspies.Coordinators.RootCoordinator;
 import com.jonbott.knownspies.Dependencies.DependencyRegistry;
 import com.jonbott.knownspies.Helpers.Constants;
 import com.jonbott.knownspies.ModelLayer.DTOs.SpyDTO;
@@ -26,6 +27,7 @@ public class SpyListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
 
     private SpyListPresenter presenter;
+    private RootCoordinator coordinator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +40,10 @@ public class SpyListActivity extends AppCompatActivity {
 
     // region Injection Methods
 
-    public void configureWith(SpyListPresenter presenter) {
+    public void configureWith(SpyListPresenter presenter, RootCoordinator coordinator) {
         this.presenter = presenter;
+        this.coordinator = coordinator;
+
         loadData();
     }
 
@@ -96,14 +100,7 @@ public class SpyListActivity extends AppCompatActivity {
     //region Navigation
 
     private void gotoSpyDetails(int spyId) {
-
-        Bundle bundle = new Bundle();
-        bundle.putInt(Constants.spyIdKey, spyId);
-
-        Intent intent = new Intent(SpyListActivity.this, SpyDetailsActivity.class);
-        intent.putExtras(bundle);
-
-        startActivity(intent);
+        coordinator.handleSpyCellTapped(this, spyId);
     }
 
     //endregion

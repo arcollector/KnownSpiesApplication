@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jonbott.knownspies.Activities.SecretDetails.SecretDetailsActivity;
+import com.jonbott.knownspies.Coordinators.RootCoordinator;
 import com.jonbott.knownspies.Dependencies.DependencyRegistry;
 import com.jonbott.knownspies.Helpers.Constants;
 import com.jonbott.knownspies.R;
@@ -20,6 +21,7 @@ public class SpyDetailsActivity extends AppCompatActivity {
     private TextView  ageTextView;
     private TextView  genderTextView;
     private ImageButton calculateButton;
+    private RootCoordinator coordinator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +48,9 @@ public class SpyDetailsActivity extends AppCompatActivity {
 
     // region Injection Methods
 
-    public void configureWith(SpyDetailsPresenter presenter) {
+    public void configureWith(SpyDetailsPresenter presenter, RootCoordinator coordinator) {
         this.presenter = presenter;
+        this.coordinator = coordinator;
 
         profileImage.setImageResource(presenter.getImageId());
         nameTextView.setText(presenter.getName());
@@ -63,14 +66,7 @@ public class SpyDetailsActivity extends AppCompatActivity {
         if(presenter == null) {
             return;
         }
-
-        Bundle bundle = new Bundle();
-               bundle.putInt(Constants.spyIdKey, presenter.getSpyId());
-
-        Intent intent = new Intent(SpyDetailsActivity.this, SecretDetailsActivity.class);
-               intent.putExtras(bundle);
-
-        startActivity(intent);
+        coordinator.handleSecretButtonTapped(this, presenter.getSpyId());
     }
 
     //endregion

@@ -70,25 +70,31 @@ public class DependencyRegistry {
 
     // endregion
 
+    // region Coordinators
+
+    public RootCoordinator rootCoordinator = new RootCoordinator();
+
+    // endregion
+
     // region Injection Methods
 
     public void inject(SpyDetailsActivity activity, Bundle bundle)
         throws NoSuchElementException {
         int spyId = idFromBundle(bundle);
         SpyDetailsPresenter presenter = new SpyDetailsPresenterImpl(spyId, activity, modelLayer);
-        activity.configureWith(presenter);
+        activity.configureWith(presenter, rootCoordinator);
     }
 
     public void inject(SecretDetailsActivity activity, Bundle bundle)
             throws NoSuchElementException {
         int spyId = idFromBundle(bundle);
         SecretDetailsPresenter presenter = new SecretDetailsPresenterImpl(spyId, modelLayer);
-        activity.configureWith(presenter);
+        activity.configureWith(presenter, rootCoordinator);
     }
 
     public void inject(SpyListActivity activity) {
         SpyListPresenter presenter = new SpyListPresenterImpl(modelLayer);
-        activity.configureWith(presenter);
+        activity.configureWith(presenter, rootCoordinator);
     }
 
     // endregion
