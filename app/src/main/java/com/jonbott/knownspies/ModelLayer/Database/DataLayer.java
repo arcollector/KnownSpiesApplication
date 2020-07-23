@@ -29,4 +29,6 @@ public interface DataLayer {
     );
 
     Spy spyForId(int spyId);
+
+    Spy spyForName(String name);
 }

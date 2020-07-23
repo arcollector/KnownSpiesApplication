@@ -58,6 +58,28 @@ public class ModelLayerImpl implements ModelLayer {
         return dto;
     }
 
+    @Override
+    public SpyDTO spyForName(String name) {
+        Spy spy = dataLayer.spyForName(name);
+        SpyDTO spyDTO = translatorLayer.translate(spy);
+        return spyDTO;
+    }
+
+    @Override
+    public void save(List<SpyDTO> dtos, Action finished) {
+        Threading.async(() -> {
+            persistDTOs(dtos, finished);
+            return true;
+        });
+    }
+
+    private void persistDTOs(List<SpyDTO> dtos, Action finished) {
+        SpyTranslator translator = translatorLayer.translatorFor(SpyDTO.dtoType);
+        dataLayer.persistDTOs(dtos, translator::translate);
+
+        Threading.dispatchMain(() -> finished.run());
+    }
+
     private void persistJson(String json, Action finished) {
         List<SpyDTO> dtos = translatorLayer.convertJson(json);
 
@@ -65,8 +87,7 @@ public class ModelLayerImpl implements ModelLayer {
 
             dataLayer.clearSpies(() -> {
                 dtos.forEach(dto -> dto.initialize());
-                SpyTranslator translator = translatorLayer.translatorFor(SpyDTO.dtoType);
-                dataLayer.persistDTOs(dtos, translator::translate);
+                persistDTOs(dtos, finished);
 
                 Threading.dispatchMain(() -> finished.run());
             });

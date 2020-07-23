@@ -1,16 +1,13 @@
 package com.jonbott.knownspies.Activities.Details;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jonbott.knownspies.Activities.SecretDetails.SecretDetailsActivity;
 import com.jonbott.knownspies.Coordinators.RootCoordinator;
 import com.jonbott.knownspies.Dependencies.DependencyRegistry;
-import com.jonbott.knownspies.Helpers.Constants;
 import com.jonbott.knownspies.R;
 
 public class SpyDetailsActivity extends AppCompatActivity {
